@@ -34,10 +34,23 @@ class App extends Component {
     this.setState({ formData:{...this.state.formData, [e.target.name]: result} })
   }
 
-  submitForm = () => {
-    let updatedPizza = this.state.formData;
-    let updatedArr = this.state.pizzas.map(pizza => pizza.id === updatedPizza.id ? updatedPizza : pizza )
-    console.log(updatedArr)
+  submitForm = (id) => {
+    console.log(id)
+    fetch(`http://localhost:3000/pizzas/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      },
+      body: JSON.stringify(this.state.formData)
+    })
+      .then(resp => resp.json())
+      .then(updatedPizza => {
+        let updatedArr = this.state.pizzas.map(pizza => pizza.id === updatedPizza.id ? updatedPizza : pizza );
+        this.setState({
+          pizzas: updatedArr
+        })
+      })
   }
 
   render() {
